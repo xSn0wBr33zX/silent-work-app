@@ -1,46 +1,57 @@
-# Stille Arbeit
+# CARE+ – Unsichtbare Arbeit sichtbar machen
 
-Kleine Web-App (PWA) zum Eintragen von Arbeitsstunden mit Statistik.
-Alle Daten bleiben lokal auf dem Handy.
+Web-App (PWA) zum Erfassen unbezahlter Care-Arbeit. Alle Daten bleiben lokal auf dem Handy.
+
+## Seiten
+
+| Seite | Inhalt |
+|---|---|
+| Willkommen | Nur beim ersten Start, danach Land wählen |
+| Home | 8 Kacheln – Antippen startet die Zeitmessung |
+| Timer | Läuft weiter, auch wenn die App geschlossen wird |
+| Aufgaben | Heute / Woche / Monat, aufklappbar mit Einzeleinträgen |
+| Statistik | Übersicht (Donut), Wert (in Landeswährung), Vergleich (Frauen/Männer/Ich) |
+| Mehr | Fakten, Land, Datensicherung |
+| „+“ unten | Zeit nachträglich eintragen |
 
 ## Dateien
 
 | Datei | Wofür |
 |---|---|
-| `index.html` | Aufbau der Seiten (Start, Eintragen, Statistik) |
-| `style.css` | Aussehen, Farben, Dark Mode |
-| `app.js` | Logik: speichern, rechnen, Diagramm, Export/Import |
-| `manifest.json` | Name, Icon, Farben: macht die Seite installierbar |
-| `sw.js` | Service Worker: App startet auch ohne Internet |
+| `index.html` | Aufbau aller Seiten |
+| `style.css` | Aussehen |
+| `app.js` | Logik – ganz oben stehen alle Zahlen (Länder, Kategorien, Fakten) |
+| `manifest.json` | Name, Icon, Farben |
+| `sw.js` | Offline-Funktion |
 | `icons/` | App-Icons |
 
-## Lokal testen
+## Zahlen anpassen
 
-Im Projektordner:
+Alle Werte stehen oben in `app.js` im Objekt `LAENDER`. Nach jeder Änderung in `sw.js`
+die Versionsnummer erhöhen (`care-plus-v3` → `care-plus-v4`).
 
-```
-python3 -m http.server 8000
-```
+**Stundensatz (Mindestlohn für Haushaltsarbeit):**
 
-Dann im Browser `http://localhost:8000` öffnen.
-(Einfach `index.html` doppelklicken reicht nicht, weil der Service Worker einen Server braucht.)
+| Land | Satz | Grundlage |
+|---|---|---|
+| Schweiz | 19,95 CHF | NAV Hauswirtschaft (Bund), ungelernt, 2026 (gilt nicht in Genf) |
+| Italien | 7,01 € | CCNL Lavoro domestico, Stufe B, 2026 |
+| Österreich | 12,23 € | Mindestlohntarif für im Haushalt Beschäftigte, stundenweise, 2026 |
+| Schweden | 171,46 kr | Kollektivvertrag Reinigung (Fastighets/Almega) |
 
-## Auf GitHub Pages veröffentlichen
+**Unbezahlte Arbeit pro Tag (Vergleich):**
 
-1. Alle Dateien ins Repository hochladen (die Ordnerstruktur beibehalten).
-2. Im Repo: **Settings → Pages → Source: "Deploy from a branch"**, Branch `main`, Ordner `/ (root)`, speichern.
-3. Nach 1–2 Minuten ist die App erreichbar unter
-   `https://<dein-github-name>.github.io/<repo-name>/`
+| Land | Frauen | Männer | Quelle |
+|---|---|---|---|
+| Schweiz | 4:06 h | 2:44 h | BFS 2020 (28,7 bzw. 19,1 Std./Woche ÷ 7) |
+| Italien | 5:06 h | 2:11 h | OECD Time Use (Männer aus +134 % berechnet) |
+| Österreich | 3:58 h | 2:26 h | Statistik Austria 2021/22 (ab 10 Jahren) |
+| Schweden | 3:40 h | 2:51 h | OECD Time Use |
 
-## Auf dem iPhone installieren
+## Veröffentlichen & installieren
 
-1. Link in **Safari** öffnen.
-2. Unten auf das **Teilen-Symbol** tippen (Quadrat mit Pfeil nach oben).
-3. **„Zum Home-Bildschirm“** wählen → **Hinzufügen**.
+1. Alle Dateien ins GitHub-Repo hochladen (Ordner `icons/` mit).
+2. Settings → Pages → Branch `main`, Ordner `/ (root)`.
+3. Auf dem iPhone in **Safari** öffnen → Teilen → **Zum Home-Bildschirm**.
 
-## Updates verteilen
-
-1. Änderung machen und hochladen.
-2. In `sw.js` die Versionsnummer erhöhen: `stille-arbeit-v1` → `stille-arbeit-v2`.
-3. Die App auf dem Handy einmal schließen und neu öffnen.
-   Die Einträge bleiben dabei erhalten.
+Lokal testen: `python3 -m http.server 8000` und `http://localhost:8000` öffnen.

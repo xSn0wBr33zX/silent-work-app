@@ -2,17 +2,16 @@
 <html lang="de">
 <head>
   <meta charset="UTF-8">
-  <!-- viewport-fit=cover: App darf bis unter die "Notch" und den Home-Balken zeichnen -->
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>Stille Arbeit</title>
+  <title>CARE+</title>
 
-  <!-- Diese Zeilen machen aus der Webseite eine installierbare App -->
   <link rel="manifest" href="manifest.json">
-  <meta name="theme-color" content="#1E3A8A">
+  <meta name="theme-color" content="#F7EFE7">
+  <meta name="color-scheme" content="light">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
-  <meta name="apple-mobile-web-app-title" content="Stille Arbeit">
+  <meta name="apple-mobile-web-app-title" content="CARE+">
   <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
   <link rel="icon" href="icons/icon-192.png">
 
@@ -20,110 +19,294 @@
 </head>
 <body>
 
-  <main>
-    <!-- ============ REITER 1: START ============ -->
-    <section id="start" class="ansicht">
-      <h1 class="begruessung">Stille Arbeit</h1>
-      <p class="untertitel" id="start-datum"></p>
+<!-- =====================================================
+     Jede <section class="screen"> ist eine Seite der App.
+     app.js zeigt immer genau eine davon an.
+     ===================================================== -->
 
-      <div class="summe">
-        <span class="summe-betrag" id="summe-euro">0,00 €</span>
-        <span class="summe-info" id="summe-info">Noch keine Stunden eingetragen</span>
-      </div>
+<!-- ============ WILLKOMMEN (nur beim ersten Start) ============ -->
+<section class="screen" id="screen-willkommen" hidden>
+  <div class="willkommen">
+    <div class="logo">CARE<span>+</span></div>
+    <p class="claim">Unsichtbare Arbeit sichtbar machen.</p>
 
-      <h2>Zuletzt eingetragen</h2>
-      <ul class="liste" id="letzte-liste"></ul>
-      <div class="leer" id="start-leer">
-        <p>Trag ein, was du gemacht hast, zum Beispiel „Bad putzen, 2 Stunden“.</p>
-        <button class="knopf" data-gehe-zu="eintragen">Ersten Eintrag machen</button>
-      </div>
-    </section>
+    <!-- Illustration: Rucksack voller Zettel = die unsichtbare Last -->
+    <svg class="illustration" viewBox="0 0 300 330" aria-hidden="true">
+      <path d="M262 60c-8-12-26-4-20 8 4 8 18 14 20 22 2-8 14-16 16-24 3-12-12-18-16-6" fill="none" stroke="#2B2326" stroke-width="2.2" stroke-linecap="round"/>
+      <path d="M115 72c0-26 70-26 70 0" fill="none" stroke="#B9565F" stroke-width="12" stroke-linecap="round"/>
+      <rect x="55" y="70" width="190" height="240" rx="46" fill="#D9737C"/>
+      <rect x="55" y="70" width="190" height="240" rx="46" fill="none" stroke="#B9565F" stroke-width="3"/>
+      <rect x="85" y="200" width="130" height="90" rx="26" fill="#C9626B"/>
+      <g font-family="ui-rounded, -apple-system, sans-serif" font-size="12.5" font-weight="600" fill="#2B2326" text-anchor="middle">
+        <g transform="rotate(-8 95 110)"><rect x="60" y="92" width="74" height="38" rx="3" fill="#FBE3A6"/><text x="97" y="116">Kochen</text></g>
+        <g transform="rotate(5 165 100)"><rect x="130" y="82" width="74" height="38" rx="3" fill="#F8D1D3"/><text x="167" y="106">Wäsche</text></g>
+        <g transform="rotate(10 215 140)"><rect x="185" y="124" width="66" height="36" rx="3" fill="#FBE3A6"/><text x="218" y="147">Kinder</text></g>
+        <g transform="rotate(-5 100 165)"><rect x="66" y="148" width="72" height="36" rx="3" fill="#FBE3A6"/><text x="102" y="171">Putzen</text></g>
+        <g transform="rotate(7 180 185)"><rect x="140" y="168" width="94" height="36" rx="3" fill="#FBE3A6"/><text x="187" y="191">Organisation</text></g>
+        <g transform="rotate(-6 110 228)"><rect x="66" y="212" width="86" height="36" rx="3" fill="#FBE3A6"/><text x="109" y="235">Einkaufen</text></g>
+        <g transform="rotate(4 200 240)"><rect x="166" y="224" width="74" height="36" rx="3" fill="#FBE3A6"/><text x="203" y="247">Termine</text></g>
+        <g transform="rotate(-3 150 280)"><rect x="124" y="262" width="56" height="36" rx="3" fill="#FCEFD2"/><text x="152" y="283">…</text></g>
+      </g>
+    </svg>
 
-    <!-- ============ REITER 2: EINTRAGEN ============ -->
-    <section id="eintragen" class="ansicht" hidden>
-      <h1>Neuer Eintrag</h1>
+    <button class="knopf knopf-voll" id="los-gehts">Los geht's</button>
+  </div>
+</section>
 
-      <form id="eintrag-formular" autocomplete="off" novalidate>
-        <label for="feld-taetigkeit">Was hast du gemacht?</label>
-        <input id="feld-taetigkeit" list="taetigkeiten-vorschlaege" placeholder="z. B. Bad putzen" required>
-        <datalist id="taetigkeiten-vorschlaege"></datalist>
-        <div class="chips" id="chips"></div>
-
-        <div class="zeile">
-          <div>
-            <label for="feld-stunden">Stunden</label>
-            <!-- type="text" + inputmode="decimal": iPhone zeigt Zahlentastatur MIT Komma -->
-            <input id="feld-stunden" type="text" inputmode="decimal" placeholder="1,5" required>
-          </div>
-          <div>
-            <label for="feld-satz">€ pro Stunde</label>
-            <input id="feld-satz" type="text" inputmode="decimal" required>
-          </div>
-        </div>
-
-        <label for="feld-datum">Datum</label>
-        <input id="feld-datum" type="date" required>
-
-        <p class="vorschau" id="vorschau">= 0,00 €</p>
-        <p class="fehler" id="fehler" role="alert"></p>
-
-        <button type="submit" class="knopf knopf-gross">Eintrag speichern</button>
-      </form>
-    </section>
-
-    <!-- ============ REITER 3: STATISTIK ============ -->
-    <section id="statistik" class="ansicht" hidden>
-      <h1>Statistik</h1>
-
-      <div class="umschalter" role="group" aria-label="Diagramm zeigt">
-        <button data-modus="stunden" class="aktiv">Stunden</button>
-        <button data-modus="euro">Euro</button>
-      </div>
-
-      <div class="diagramm-box">
-        <svg id="diagramm" viewBox="0 0 200 200" role="img" aria-label="Kuchendiagramm der Tätigkeiten"></svg>
-        <div class="diagramm-mitte">
-          <span id="mitte-wert">0</span>
-          <span id="mitte-label">Stunden</span>
-        </div>
-      </div>
-
-      <ul class="legende" id="legende"></ul>
-      <p class="leer-text" id="statistik-leer">Sobald du Einträge machst, siehst du hier, wie sich deine Arbeit verteilt.</p>
-
-      <h2>Alle Einträge</h2>
-      <ul class="liste" id="alle-liste"></ul>
-
-      <h2>Daten sichern</h2>
-      <p class="hinweis">Deine Einträge liegen nur auf diesem Handy. Sichere sie ab und zu als Datei.</p>
-      <div class="knopf-reihe">
-        <button class="knopf knopf-hell" id="exportieren">Exportieren</button>
-        <label class="knopf knopf-hell" for="import-datei">Importieren</label>
-        <input type="file" id="import-datei" accept="application/json,.json" hidden>
-      </div>
-      <button class="knopf-text-gefahr" id="alles-loeschen">Alle Einträge löschen</button>
-    </section>
-  </main>
-
-  <!-- Kurze Bestätigung, z. B. "Eintrag gespeichert" -->
-  <div class="toast" id="toast" role="status" aria-live="polite"></div>
-
-  <!-- ============ TAB-LEISTE UNTEN ============ -->
-  <nav class="tabs" aria-label="Navigation">
-    <button data-tab="start" class="aktiv">
-      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11.5 12 4l9 7.5V20a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z"/></svg>
-      Start
+<!-- ============ LAND WÄHLEN ============ -->
+<section class="screen" id="screen-land" hidden>
+  <header class="kopfzeile">
+    <button class="zurueck" data-zurueck aria-label="Zurück">
+      <svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg>
     </button>
-    <button data-tab="eintragen">
-      <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7.5v9M7.5 12h9"/></svg>
-      Eintragen
-    </button>
-    <button data-tab="statistik">
-      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v9h9a9 9 0 1 1-9-9z"/><path d="M15 3.5A9 9 0 0 1 20.5 9H15z"/></svg>
-      Statistik
-    </button>
-  </nav>
+    <h1>Dein Land</h1>
+    <span></span>
+  </header>
+  <p class="text-gedimmt">Der Stundenwert ist der Mindestlohn für Arbeit im Haushalt in diesem Land.</p>
+  <div class="laender" id="laender" role="radiogroup" aria-label="Land wählen"></div>
+  <p class="kleingedruckt">
+    In keinem der vier Länder gibt es einen allgemeinen gesetzlichen Mindestlohn. Löhne werden dort über
+    Tarif- bzw. Kollektivverträge oder (in der Schweiz) kantonal geregelt. Für Arbeit im Haushalt gibt es
+    aber in jedem Land einen verbindlichen Mindestsatz – den nutzt diese App.
+  </p>
+</section>
 
-  <script src="app.js"></script>
+<!-- ============ HOME (Kacheln) ============ -->
+<section class="screen" id="screen-home" hidden>
+  <header class="home-kopf">
+    <div>
+      <h1>Hallo!</h1>
+      <p class="text-gedimmt">Was möchtest du heute erfassen?</p>
+    </div>
+    <button class="profil" data-gehe="land" id="profil-knopf" aria-label="Land ändern"></button>
+  </header>
+
+  <!-- Erscheint, wenn eine Zeitmessung läuft -->
+  <button class="laeuft-banner" id="laeuft-banner" hidden></button>
+
+  <div class="kacheln" id="kacheln"></div>
+</section>
+
+<!-- ============ TIMER ============ -->
+<section class="screen" id="screen-timer" hidden>
+  <header class="kopfzeile">
+    <button class="zurueck" data-gehe="home" aria-label="Zurück">
+      <svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg>
+    </button>
+    <h1 id="timer-titel">Kochen</h1>
+    <span></span>
+  </header>
+
+  <div class="timer-ring">
+    <svg viewBox="0 0 220 220" aria-hidden="true">
+      <circle cx="110" cy="110" r="96" class="ring-hinten"/>
+      <circle cx="110" cy="110" r="96" class="ring-vorne" id="ring-vorne"/>
+    </svg>
+    <div class="timer-mitte">
+      <span class="timer-symbol" id="timer-symbol"></span>
+      <span class="timer-zeit" id="timer-zeit">00:00:00</span>
+      <span class="timer-status" id="timer-status">läuft …</span>
+    </div>
+  </div>
+
+  <button class="pause-knopf" id="pause-knopf" aria-label="Pause"></button>
+
+  <label class="feld-label" for="timer-notiz" id="timer-notiz-label">Notiz (optional)</label>
+  <textarea id="timer-notiz" rows="2" maxlength="80" placeholder="z. B. Abendessen für alle gekocht"></textarea>
+
+  <button class="knopf knopf-voll" id="timer-fertig">Fertig</button>
+  <button class="text-knopf" id="timer-verwerfen">Messung verwerfen</button>
+</section>
+
+<!-- ============ AUFGABEN ============ -->
+<section class="screen" id="screen-aufgaben" hidden>
+  <h1>Meine Aufgaben</h1>
+  <div class="pillen" id="aufgaben-zeitraum">
+    <button data-wert="tag" class="aktiv">Heute</button>
+    <button data-wert="woche">Diese Woche</button>
+    <button data-wert="monat">Diesen Monat</button>
+  </div>
+  <ul class="aufgaben-liste" id="aufgaben-liste"></ul>
+  <div class="leer" id="aufgaben-leer" hidden>
+    <p>In diesem Zeitraum hast du noch nichts erfasst.</p>
+    <button class="knopf knopf-hell" data-gehe="home">Jetzt erfassen</button>
+  </div>
+</section>
+
+<!-- ============ STATISTIK ============ -->
+<section class="screen" id="screen-statistik" hidden>
+  <div class="unter-reiter" id="statistik-reiter">
+    <button data-wert="uebersicht" class="aktiv">Übersicht</button>
+    <button data-wert="wert">Wert</button>
+    <button data-wert="vergleich">Vergleich</button>
+  </div>
+
+  <!-- Übersicht -->
+  <div class="teil" id="teil-uebersicht">
+    <h1>Meine Statistik</h1>
+    <div class="pillen" id="statistik-zeitraum">
+      <button data-wert="tag" class="aktiv">Tag</button>
+      <button data-wert="woche">Woche</button>
+      <button data-wert="monat">Monat</button>
+    </div>
+    <div class="datum-nav">
+      <button id="datum-zurueck" aria-label="Früher"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button>
+      <span id="datum-text"></span>
+      <button id="datum-vor" aria-label="Später"><svg viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></button>
+    </div>
+    <div class="donut">
+      <svg viewBox="0 0 200 200" id="donut" role="img" aria-label="Verteilung deiner Zeit"></svg>
+      <div class="donut-mitte">
+        <span>Gesamt</span>
+        <strong id="donut-gesamt">0:00 h</strong>
+      </div>
+    </div>
+    <ul class="legende" id="legende"></ul>
+  </div>
+
+  <!-- Wert -->
+  <div class="teil" id="teil-wert" hidden>
+    <h1>Was wäre das wert?</h1>
+    <div class="pillen" id="wert-zeitraum">
+      <button data-wert="tag" class="aktiv">Heute</button>
+      <button data-wert="woche">Woche</button>
+      <button data-wert="monat">Monat</button>
+      <button data-wert="gesamt">Gesamt</button>
+    </div>
+    <p id="wert-einleitung"></p>
+    <div class="wert-zahl">
+      <svg viewBox="0 0 64 56" aria-hidden="true">
+        <g stroke="#B8862B" stroke-width="2">
+          <ellipse cx="22" cy="46" rx="17" ry="6" fill="#F2C25B"/><rect x="5" y="34" width="34" height="12" fill="#F2C25B" stroke="none"/><path d="M5 34v12M39 34v12" fill="none"/>
+          <ellipse cx="22" cy="34" rx="17" ry="6" fill="#F7D57E"/>
+          <ellipse cx="42" cy="40" rx="17" ry="6" fill="#F2C25B"/><rect x="25" y="18" width="34" height="22" fill="#F2C25B" stroke="none"/><path d="M25 18v22M59 18v22" fill="none"/>
+          <path d="M25 26c0 3.3 7.6 6 17 6s17-2.7 17-6M25 33c0 3.3 7.6 6 17 6s17-2.7 17-6" fill="none"/>
+          <ellipse cx="42" cy="18" rx="17" ry="6" fill="#F7D57E"/>
+        </g>
+      </svg>
+      <span id="wert-betrag">0,00 €</span>
+    </div>
+    <p class="text-gedimmt klein" id="wert-grundlage"></p>
+
+    <div class="hinweis-rosa">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7.5-4.6-9.5-9.3C1 8 3.4 4.5 7 4.5c2 0 3.5 1.1 5 3 1.5-1.9 3-3 5-3 3.6 0 6 3.5 4.5 7.2C19.5 16.4 12 21 12 21z"/></svg>
+      <p>Unbezahlte Arbeit ist kein Hobby – <strong>sie hat einen echten Wert</strong>, auch wenn sie im Alltag oft nicht gesehen wird.</p>
+    </div>
+
+    <h2>Deine Zeit in den vier Ländern</h2>
+    <ul class="karten-liste" id="wert-laender"></ul>
+  </div>
+
+  <!-- Vergleich -->
+  <div class="teil" id="teil-vergleich" hidden>
+    <h1>Vergleich</h1>
+    <div class="pillen pillen-drei" id="vergleich-modus">
+      <button data-wert="ich">Ich</button>
+      <button data-wert="frauen" class="aktiv">Frauen</button>
+      <button data-wert="maenner">Männer</button>
+    </div>
+    <p class="diagramm-titel">Durchschnittliche Zeit für unbezahlte Arbeit pro Tag<br><span>(in Stunden)</span></p>
+    <div class="legende-klein">
+      <span><i style="background:var(--frauen)"></i>Frauen</span>
+      <span><i style="background:var(--maenner)"></i>Männer</span>
+      <span id="legende-ich" hidden><i class="strich"></i>Du</span>
+    </div>
+    <div class="balken-diagramm" id="balken"></div>
+    <p class="text-gedimmt klein" id="ich-hinweis" hidden></p>
+
+    <div class="hinweis-gelb">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3.5 10.9c.6.4 1 1.1 1 1.8V16h5v-.3c0-.7.4-1.4 1-1.8A6 6 0 0 0 12 3z"/></svg>
+      <p>In allen vier Ländern leisten Frauen im Durchschnitt deutlich mehr unbezahlte Care-Arbeit als Männer.</p>
+    </div>
+    <p class="kleingedruckt" id="vergleich-quellen"></p>
+  </div>
+</section>
+
+<!-- ============ MEHR ============ -->
+<section class="screen" id="screen-mehr" hidden>
+  <h1>Schon gewusst?</h1>
+  <div class="fakten-karussell">
+    <button class="karussell-pfeil" id="fakt-zurueck" aria-label="Vorheriger Fakt"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button>
+    <div class="fakten-spur" id="fakten-spur"></div>
+    <button class="karussell-pfeil" id="fakt-vor" aria-label="Nächster Fakt"><svg viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></button>
+  </div>
+  <div class="punkte" id="fakten-punkte"></div>
+
+  <h2>Mehr Fakten</h2>
+  <div class="aufklapp-liste" id="mehr-fakten"></div>
+
+  <h2>Einstellungen</h2>
+  <div class="aufklapp-liste">
+    <button class="zeile-knopf" data-gehe="land">
+      <span class="mini-symbol" style="background:var(--blau-hell)">🌍</span>
+      <span class="zeile-text">Land<small id="mehr-land"></small></span>
+      <svg class="pfeil" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg>
+    </button>
+    <button class="zeile-knopf" id="exportieren">
+      <span class="mini-symbol" style="background:var(--gruen-hell)">⬆️</span>
+      <span class="zeile-text">Daten sichern<small>Als Datei exportieren</small></span>
+    </button>
+    <label class="zeile-knopf" for="import-datei">
+      <span class="mini-symbol" style="background:var(--lila-hell)">⬇️</span>
+      <span class="zeile-text">Daten wiederherstellen<small>Sicherungsdatei importieren</small></span>
+    </label>
+    <input type="file" id="import-datei" accept="application/json,.json" hidden>
+  </div>
+  <button class="text-knopf gefahr" id="alles-loeschen">Alle Einträge löschen</button>
+</section>
+
+<!-- ============ ZEIT NACHTRAGEN (Fenster über dem "+" ) ============ -->
+<div class="sheet-hintergrund" id="sheet-hintergrund" hidden></div>
+<div class="sheet" id="sheet" role="dialog" aria-modal="true" aria-labelledby="sheet-titel" hidden>
+  <div class="sheet-griff"></div>
+  <div class="sheet-kopf">
+    <h2 id="sheet-titel">Zeit nachtragen</h2>
+    <button class="schliessen" id="sheet-schliessen" aria-label="Schließen">×</button>
+  </div>
+  <div class="mini-kacheln" id="sheet-kategorien"></div>
+
+  <p class="feld-label">Wie lange?</p>
+  <div class="stepper">
+    <button type="button" id="minus" aria-label="15 Minuten weniger">−</button>
+    <output id="dauer-anzeige">1:00 h</output>
+    <button type="button" id="plus" aria-label="15 Minuten mehr">+</button>
+  </div>
+
+  <div class="zwei-spalten">
+    <div>
+      <label class="feld-label" for="sheet-datum">Datum</label>
+      <input type="date" id="sheet-datum">
+    </div>
+    <div>
+      <label class="feld-label" for="sheet-notiz" id="sheet-notiz-label">Notiz (optional)</label>
+      <input id="sheet-notiz" maxlength="80" placeholder="optional">
+    </div>
+  </div>
+  <p class="fehler" id="sheet-fehler" role="alert"></p>
+  <button class="knopf knopf-voll" id="sheet-speichern">Speichern</button>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<!-- ============ NAVIGATION UNTEN ============ -->
+<nav class="nav" id="nav" aria-label="Navigation">
+  <button data-gehe="home">
+    <svg viewBox="0 0 24 24"><path d="M3.5 11 12 4l8.5 7v8.5a1 1 0 0 1-1 1H15v-6H9v6H4.5a1 1 0 0 1-1-1z"/></svg>Home
+  </button>
+  <button data-gehe="statistik">
+    <svg viewBox="0 0 24 24"><path d="M5 20V12M10 20V5M15 20v-9M20 20v-5"/></svg>Statistik
+  </button>
+  <button class="plus" id="plus-knopf" aria-label="Zeit nachtragen">
+    <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
+  </button>
+  <button data-gehe="aufgaben">
+    <svg viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="15" rx="2.5"/><path d="M8.5 12.5l2.5 2.5 4.5-5"/></svg>Aufgaben
+  </button>
+  <button data-gehe="mehr">
+    <svg viewBox="0 0 24 24"><circle cx="5" cy="12" r="1.3"/><circle cx="12" cy="12" r="1.3"/><circle cx="19" cy="12" r="1.3"/></svg>Mehr
+  </button>
+</nav>
+
+<script src="app.js"></script>
 </body>
 </html>

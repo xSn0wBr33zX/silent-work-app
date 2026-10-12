@@ -1,4 +1,4 @@
-# CARE+ – Unsichtbare Arbeit sichtbar machen
+# Unsichtbare Arbeit sichtbar machen
 
 Web-App (PWA) zum Erfassen unbezahlter Care-Arbeit. Alle Daten bleiben lokal auf dem Handy.
 
@@ -25,11 +25,6 @@ Web-App (PWA) zum Erfassen unbezahlter Care-Arbeit. Alle Daten bleiben lokal auf
 | `sw.js` | Offline-Funktion |
 | `icons/` | App-Icons |
 
-## Zahlen anpassen
-
-Alle Werte stehen oben in `app.js` im Objekt `LAENDER`. Nach jeder Änderung in `sw.js`
-die Versionsnummer erhöhen (`care-plus-v3` → `care-plus-v4`).
-
 **Stundensatz (Mindestlohn für Haushaltsarbeit):**
 
 | Land | Satz | Grundlage |
@@ -50,8 +45,6 @@ die Versionsnummer erhöhen (`care-plus-v3` → `care-plus-v4`).
 
 ## Veröffentlichen & installieren
 
-1. Alle Dateien ins GitHub-Repo hochladen (Ordner `icons/` mit).
-2. Settings → Pages → Branch `main`, Ordner `/ (root)`.
-3. Auf dem iPhone in **Safari** öffnen → Teilen → **Zum Home-Bildschirm**.
+1. Auf dem iPhone in **Safari** öffnen → Teilen → **Zum Home-Bildschirm**.
 
 Lokal testen: `python3 -m http.server 8000` und `http://localhost:8000` öffnen.

@@ -1,0 +1,383 @@
+/* =========================================================
+   Farben als Variablen: einmal festlegen, überall benutzen.
+   Idee: Schulheft – helles Papier, Füller-Blau, Textmarker-Gelb.
+   ========================================================= */
+:root {
+  --papier: #F3F5F7;
+  --karte: #FFFFFF;
+  --text: #1C2430;
+  --bleistift: #667080;
+  --linie: #DDE2E8;
+  --tinte: #1E3A8A;
+  --tinte-text: #FFFFFF;
+  --marker: #F6D44A;
+  --gefahr: #C0392B;
+
+  --rund-klein: 10px;
+  --rund-gross: 18px;
+  --schrift: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  /* ui-rounded = die runde Systemschrift vom iPhone (SF Pro Rounded) */
+  --schrift-zahlen: ui-rounded, "SF Pro Rounded", -apple-system, system-ui, sans-serif;
+
+  --tab-hoehe: 64px;
+}
+
+/* Automatischer Dark Mode, wenn das iPhone dunkel eingestellt ist */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --papier: #12161D;
+    --karte: #1B212B;
+    --text: #E8ECF2;
+    --bleistift: #98A2B3;
+    --linie: #2A323E;
+    --tinte: #8FA8FF;
+    --tinte-text: #0E1630;
+    --marker: #E8C53A;
+    --gefahr: #FF6B5B;
+  }
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  background: var(--papier);
+  color: var(--text);
+  font-family: var(--schrift);
+  font-size: 17px;
+  line-height: 1.45;
+  -webkit-tap-highlight-color: transparent;
+}
+
+main {
+  max-width: 560px;
+  margin: 0 auto;
+  /* env(safe-area-inset-...) = Platz für Notch und Home-Balken am iPhone */
+  padding: calc(env(safe-area-inset-top, 0px) + 20px) 20px
+           calc(env(safe-area-inset-bottom, 0px) + var(--tab-hoehe) + 32px);
+}
+
+h1 {
+  font-family: var(--schrift-zahlen);
+  font-size: 2rem;
+  line-height: 1.15;
+  margin: 8px 0 20px;
+}
+
+h2 {
+  font-size: 1.05rem;
+  margin: 32px 0 10px;
+}
+
+/* ---------- Start ---------- */
+.begruessung { margin-bottom: 2px; }
+.untertitel { color: var(--bleistift); margin: 0 0 28px; }
+
+.summe {
+  background: var(--tinte);
+  color: var(--tinte-text);
+  border-radius: var(--rund-gross);
+  padding: 24px 22px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.summe-betrag {
+  font-family: var(--schrift-zahlen);
+  font-size: 3rem;
+  font-weight: 700;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
+}
+.summe-info { opacity: .85; }
+
+/* ---------- Listen ---------- */
+.liste {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  background: var(--karte);
+  border-radius: var(--rund-klein);
+}
+.liste:empty { display: none; }
+.liste li {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--linie);
+}
+.liste li:last-child { border-bottom: 0; }
+.eintrag-text { flex: 1; min-width: 0; }
+.eintrag-name {
+  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.eintrag-detail { color: var(--bleistift); font-size: .88rem; }
+.eintrag-betrag { font-weight: 600; font-variant-numeric: tabular-nums; }
+
+.loeschen {
+  border: 0;
+  background: none;
+  color: var(--bleistift);
+  font-size: 1.3rem;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  cursor: pointer;
+}
+.loeschen:active { background: var(--linie); }
+
+.leer, .leer-text {
+  color: var(--bleistift);
+  text-align: center;
+  padding: 16px 8px;
+}
+
+/* ---------- Formular ---------- */
+label {
+  display: block;
+  font-weight: 600;
+  font-size: .92rem;
+  margin: 18px 0 6px;
+}
+input {
+  width: 100%;
+  font: inherit;
+  /* 17px verhindert, dass das iPhone beim Tippen reinzoomt */
+  font-size: 17px;
+  color: var(--text);
+  background: var(--karte);
+  border: 1.5px solid var(--linie);
+  border-radius: var(--rund-klein);
+  padding: 12px 14px;
+  -webkit-appearance: none;
+  appearance: none;
+  min-height: 48px;
+}
+input:focus {
+  outline: none;
+  border-color: var(--tinte);
+}
+.zeile {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
+}
+.chips:empty { display: none; }
+.chip {
+  border: 1.5px solid var(--linie);
+  background: var(--karte);
+  color: var(--text);
+  border-radius: 999px;
+  padding: 6px 12px;
+  font: inherit;
+  font-size: .9rem;
+  cursor: pointer;
+}
+.chip:active { border-color: var(--tinte); }
+
+.vorschau {
+  font-family: var(--schrift-zahlen);
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin: 24px 0 4px;
+  font-variant-numeric: tabular-nums;
+}
+.fehler {
+  color: var(--gefahr);
+  min-height: 1.4em;
+  margin: 0 0 8px;
+  font-size: .95rem;
+}
+
+/* ---------- Knöpfe ---------- */
+.knopf {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font: inherit;
+  font-weight: 600;
+  border: 0;
+  border-radius: var(--rund-klein);
+  background: var(--tinte);
+  color: var(--tinte-text);
+  padding: 12px 18px;
+  min-height: 48px;
+  cursor: pointer;
+}
+.knopf:active { transform: scale(.98); }
+.knopf-gross { width: 100%; }
+.knopf-hell {
+  background: var(--karte);
+  color: var(--text);
+  border: 1.5px solid var(--linie);
+  margin: 0;
+  font-size: .95rem;
+}
+.knopf-reihe {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+.knopf-text-gefahr {
+  display: block;
+  margin: 20px auto 0;
+  background: none;
+  border: 0;
+  font: inherit;
+  color: var(--gefahr);
+  padding: 10px;
+  cursor: pointer;
+}
+.hinweis { color: var(--bleistift); font-size: .92rem; margin-top: 0; }
+
+button:focus-visible, .knopf:focus-visible, input:focus-visible {
+  outline: 3px solid var(--marker);
+  outline-offset: 2px;
+}
+
+/* ---------- Statistik ---------- */
+.umschalter {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  background: var(--linie);
+  border-radius: var(--rund-klein);
+  padding: 3px;
+  margin-bottom: 20px;
+}
+.umschalter button {
+  font: inherit;
+  font-weight: 600;
+  border: 0;
+  background: none;
+  color: var(--bleistift);
+  padding: 8px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+.umschalter button.aktiv {
+  background: var(--karte);
+  color: var(--text);
+}
+
+.diagramm-box {
+  position: relative;
+  width: min(280px, 80vw);
+  margin: 0 auto 20px;
+}
+#diagramm { width: 100%; display: block; }
+#diagramm circle { transition: stroke-dasharray .4s ease, stroke-dashoffset .4s ease; }
+.diagramm-mitte {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+#mitte-wert {
+  font-family: var(--schrift-zahlen);
+  font-size: 2rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+#mitte-label { color: var(--bleistift); font-size: .9rem; }
+
+.legende {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.legende li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--linie);
+}
+.legende li:last-child { border-bottom: 0; }
+.punkt {
+  width: 14px;
+  height: 14px;
+  border-radius: 4px;
+  flex-shrink: 0;
+}
+.legende-name { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.legende-wert { font-variant-numeric: tabular-nums; text-align: right; }
+.legende-prozent { color: var(--bleistift); font-size: .85rem; display: block; }
+
+/* ---------- Tab-Leiste ---------- */
+.tabs {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  background: color-mix(in srgb, var(--karte) 88%, transparent);
+  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(16px);
+  border-top: 1px solid var(--linie);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  z-index: 10;
+}
+.tabs button {
+  height: var(--tab-hoehe);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  border: 0;
+  background: none;
+  font: inherit;
+  font-size: .72rem;
+  font-weight: 600;
+  color: var(--bleistift);
+  cursor: pointer;
+}
+.tabs svg {
+  width: 26px;
+  height: 26px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+}
+.tabs button.aktiv { color: var(--tinte); }
+.tabs button.aktiv svg { fill: color-mix(in srgb, var(--tinte) 15%, transparent); }
+
+/* ---------- Toast ---------- */
+.toast {
+  position: fixed;
+  left: 50%;
+  bottom: calc(env(safe-area-inset-bottom, 0px) + var(--tab-hoehe) + 16px);
+  transform: translate(-50%, 20px);
+  background: var(--text);
+  color: var(--papier);
+  padding: 10px 18px;
+  border-radius: 999px;
+  font-weight: 600;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .2s, transform .2s;
+  z-index: 20;
+}
+.toast.sichtbar { opacity: 1; transform: translate(-50%, 0); }
+
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; }
+}

@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <!-- viewport-fit=cover: App darf bis unter die "Notch" und den Home-Balken zeichnen -->
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Stille Arbeit</title>
+
+  <!-- Diese Zeilen machen aus der Webseite eine installierbare App -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#1E3A8A">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Stille Arbeit">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+  <link rel="icon" href="icons/icon-192.png">
+
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <main>
+    <!-- ============ REITER 1: START ============ -->
+    <section id="start" class="ansicht">
+      <h1 class="begruessung">Stille Arbeit</h1>
+      <p class="untertitel" id="start-datum"></p>
+
+      <div class="summe">
+        <span class="summe-betrag" id="summe-euro">0,00 €</span>
+        <span class="summe-info" id="summe-info">Noch keine Stunden eingetragen</span>
+      </div>
+
+      <h2>Zuletzt eingetragen</h2>
+      <ul class="liste" id="letzte-liste"></ul>
+      <div class="leer" id="start-leer">
+        <p>Trag ein, was du gemacht hast, zum Beispiel „Bad putzen, 2 Stunden“.</p>
+        <button class="knopf" data-gehe-zu="eintragen">Ersten Eintrag machen</button>
+      </div>
+    </section>
+
+    <!-- ============ REITER 2: EINTRAGEN ============ -->
+    <section id="eintragen" class="ansicht" hidden>
+      <h1>Neuer Eintrag</h1>
+
+      <form id="eintrag-formular" autocomplete="off" novalidate>
+        <label for="feld-taetigkeit">Was hast du gemacht?</label>
+        <input id="feld-taetigkeit" list="taetigkeiten-vorschlaege" placeholder="z. B. Bad putzen" required>
+        <datalist id="taetigkeiten-vorschlaege"></datalist>
+        <div class="chips" id="chips"></div>
+
+        <div class="zeile">
+          <div>
+            <label for="feld-stunden">Stunden</label>
+            <!-- type="text" + inputmode="decimal": iPhone zeigt Zahlentastatur MIT Komma -->
+            <input id="feld-stunden" type="text" inputmode="decimal" placeholder="1,5" required>
+          </div>
+          <div>
+            <label for="feld-satz">€ pro Stunde</label>
+            <input id="feld-satz" type="text" inputmode="decimal" required>
+          </div>
+        </div>
+
+        <label for="feld-datum">Datum</label>
+        <input id="feld-datum" type="date" required>
+
+        <p class="vorschau" id="vorschau">= 0,00 €</p>
+        <p class="fehler" id="fehler" role="alert"></p>
+
+        <button type="submit" class="knopf knopf-gross">Eintrag speichern</button>
+      </form>
+    </section>
+
+    <!-- ============ REITER 3: STATISTIK ============ -->
+    <section id="statistik" class="ansicht" hidden>
+      <h1>Statistik</h1>
+
+      <div class="umschalter" role="group" aria-label="Diagramm zeigt">
+        <button data-modus="stunden" class="aktiv">Stunden</button>
+        <button data-modus="euro">Euro</button>
+      </div>
+
+      <div class="diagramm-box">
+        <svg id="diagramm" viewBox="0 0 200 200" role="img" aria-label="Kuchendiagramm der Tätigkeiten"></svg>
+        <div class="diagramm-mitte">
+          <span id="mitte-wert">0</span>
+          <span id="mitte-label">Stunden</span>
+        </div>
+      </div>
+
+      <ul class="legende" id="legende"></ul>
+      <p class="leer-text" id="statistik-leer">Sobald du Einträge machst, siehst du hier, wie sich deine Arbeit verteilt.</p>
+
+      <h2>Alle Einträge</h2>
+      <ul class="liste" id="alle-liste"></ul>
+
+      <h2>Daten sichern</h2>
+      <p class="hinweis">Deine Einträge liegen nur auf diesem Handy. Sichere sie ab und zu als Datei.</p>
+      <div class="knopf-reihe">
+        <button class="knopf knopf-hell" id="exportieren">Exportieren</button>
+        <label class="knopf knopf-hell" for="import-datei">Importieren</label>
+        <input type="file" id="import-datei" accept="application/json,.json" hidden>
+      </div>
+      <button class="knopf-text-gefahr" id="alles-loeschen">Alle Einträge löschen</button>
+    </section>
+  </main>
+
+  <!-- Kurze Bestätigung, z. B. "Eintrag gespeichert" -->
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <!-- ============ TAB-LEISTE UNTEN ============ -->
+  <nav class="tabs" aria-label="Navigation">
+    <button data-tab="start" class="aktiv">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11.5 12 4l9 7.5V20a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z"/></svg>
+      Start
+    </button>
+    <button data-tab="eintragen">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7.5v9M7.5 12h9"/></svg>
+      Eintragen
+    </button>
+    <button data-tab="statistik">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v9h9a9 9 0 1 1-9-9z"/><path d="M15 3.5A9 9 0 0 1 20.5 9H15z"/></svg>
+      Statistik
+    </button>
+  </nav>
+
+  <script src="app.js"></script>
+</body>
+</html>

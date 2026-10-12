@@ -1,5 +1,5 @@
 /* =========================================================
-   CARE+ – Gestaltung nach dem Entwurf
+   Stille Arbeit – Gestaltung nach dem Entwurf
    Creme-Hintergrund, Altrosa als Hauptfarbe, Pastell-Kacheln.
    ========================================================= */
 :root {
@@ -110,9 +110,9 @@ button:focus-visible, input:focus-visible, textarea:focus-visible, label:focus-v
 .logo {
   font-family: var(--schrift-rund);
   font-weight: 900;
-  font-size: 4rem;
+  font-size: 3.4rem;
   letter-spacing: -.02em;
-  line-height: 1;
+  line-height: .95;
   margin-top: 6vh;
 }
 .logo span { color: var(--rosa); }

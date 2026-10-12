@@ -1,5 +1,5 @@
 /* =========================================================
-   CARE+ – Unsichtbare Arbeit sichtbar machen
+   Stille Arbeit – Unsichtbare Arbeit sichtbar machen
    Alles läuft lokal im Browser. Gespeichert wird im localStorage.
 
    Aufbau dieser Datei:
@@ -673,11 +673,11 @@ $("mehr-fakten").addEventListener("click", ereignis => {
 
 // Daten sichern
 $("exportieren").addEventListener("click", async () => {
-  const daten = JSON.stringify({ app: "care-plus", version: 3, land: landLaden(), eintraege: eintraegeLaden() }, null, 2);
-  const dateiname = `care-plus-${heute()}.json`;
+  const daten = JSON.stringify({ app: "stille-arbeit", version: 3, land: landLaden(), eintraege: eintraegeLaden() }, null, 2);
+  const dateiname = `stille-arbeit-${heute()}.json`;
   const datei = new File([daten], dateiname, { type: "application/json" });
   if (navigator.canShare && navigator.canShare({ files: [datei] })) {
-    try { await navigator.share({ files: [datei], title: "CARE+ Sicherung" }); } catch { /* abgebrochen */ }
+    try { await navigator.share({ files: [datei], title: "Stille Arbeit – Sicherung" }); } catch { /* abgebrochen */ }
     return;
   }
   const link = document.createElement("a");

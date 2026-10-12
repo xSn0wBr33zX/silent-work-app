@@ -5,7 +5,7 @@
   WICHTIG: Wenn du etwas an der App änderst, erhöhe die Versionsnummer
   (z. B. auf "v2"). Sonst sehen die Handys weiter die alte Version.
 */
-const CACHE_NAME = "stille-arbeit-v4";
+const CACHE_NAME = "stille-arbeit-v5";
 const DATEIEN = [
   "./",
   "./index.html",

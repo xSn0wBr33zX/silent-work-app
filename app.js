@@ -15,12 +15,19 @@
 
 /*
   LÄNDER
-  satz:     Mindestlohn für Arbeit im Haushalt (pro Stunde, Landeswährung)
+  satz:     Mindestlohn pro Stunde in Landeswährung. Deutschland: gesetzlicher
+            Mindestlohn. Andere Länder: Mindestlohn für Arbeit im Haushalt,
+            weil es dort keinen allgemeinen gesetzlichen Mindestlohn gibt.
   frauen /
   maenner:  Durchschnittliche unbezahlte Arbeit pro Tag in MINUTEN
   Werte prüfen und bei Bedarf hier anpassen (meist zum 1. Januar).
 */
 const LAENDER = {
+  de: {
+    name: "Deutschland", flagge: "🇩🇪", waehrung: "EUR", sprache: "de-DE",
+    satz: 13.90, satzQuelle: "Gesetzlicher Mindestlohn, seit 1. Januar 2026",
+    frauen: 253, maenner: 176, zeitQuelle: "Destatis, Zeitverwendungserhebung 2022"
+  },
   ch: {
     name: "Schweiz", flagge: "🇨🇭", waehrung: "CHF", sprache: "de-CH",
     satz: 19.95, satzQuelle: "NAV Hauswirtschaft (Bund), ungelernt, 2026",
@@ -61,6 +68,8 @@ const KATEGORIEN = [
 
 // Fakten mit Quelle für "Schon gewusst?"
 const FAKTEN = [
+  { text: "In Deutschland leisten Frauen 43,8 % mehr unbezahlte Arbeit als Männer – im Schnitt 1 Stunde und 17 Minuten mehr pro Tag.",
+    quelle: "Destatis, Zeitverwendungserhebung 2022 (Gender Care Gap)" },
   { text: "In 23 europäischen Ländern leisten Frauen im Schnitt 86 % mehr unbezahlte Arbeit als Männer – rund 2 Stunden pro Tag.",
     quelle: "OECD, berichtet von Euronews (2025)" },
   { text: "In der Schweiz wurde 2020 unbezahlte Arbeit im Wert von 434 Milliarden Franken geleistet – 60 % davon von Frauen.",
@@ -579,7 +588,7 @@ function zeichneWert(alle, landCode) {
   $("wert-einleitung").textContent = `Wenn unbezahlte Care-Arbeit bezahlt werden würde, ${wann} einen Wert von:`;
   $("wert-betrag").textContent = geld(minuten / 60 * land.satz, landCode);
   $("wert-grundlage").textContent =
-    `${hm(minuten)} × ${geld(land.satz, landCode)} – Mindestlohn für Haushaltsarbeit in ${land.name} (${land.satzQuelle}).`;
+    `${hm(minuten)} × ${geld(land.satz, landCode)} pro Stunde. Grundlage für ${land.name}: ${land.satzQuelle}.`;
 
   $("wert-laender").innerHTML = Object.entries(LAENDER).map(([code, l]) => `
     <li class="${code === landCode ? "aktuell" : ""}">

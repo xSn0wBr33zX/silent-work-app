@@ -380,26 +380,27 @@ textarea:focus, input:focus { outline: none; border-color: var(--rosa); }
 .balken-diagramm {
   position: relative;
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 8px;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 4px;
   height: 230px;
   padding-bottom: 24px;
 }
-.balken-gruppe { position: relative; display: flex; justify-content: center; align-items: flex-end; gap: 5px; }
+.balken-gruppe { position: relative; display: flex; justify-content: center; align-items: flex-end; gap: 3px; height: 100%; }
 .balken {
   position: relative;
-  width: 28px;
-  border-radius: 8px 8px 3px 3px;
+  width: 24px;
+  border-radius: 7px 7px 3px 3px;
   transition: height .4s ease, opacity .2s;
 }
 .balken span {
   position: absolute; bottom: 100%; left: 50%; transform: translateX(-50%);
-  font-size: .72rem; font-weight: 600; padding-bottom: 3px; white-space: nowrap;
+  font-size: .66rem; font-weight: 600; padding-bottom: 3px; white-space: nowrap;
 }
 .balken.gedimmt { opacity: .3; }
 .balken-gruppe b {
   position: absolute; top: 100%; left: 0; right: 0;
-  text-align: center; font-size: .78rem; font-weight: 600; padding-top: 6px;
+  text-align: center; font-size: .7rem; font-weight: 600; padding-top: 6px;
+  white-space: nowrap; margin: 0 -6px;
 }
 .ich-linie {
   position: absolute; left: 0; right: 0;
